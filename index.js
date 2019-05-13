@@ -23,7 +23,7 @@ module.exports = {
     } else if(process.argv.slice(2).includes('--ver')){
         console.log(`Node version: ${process.version} ; EasyWormhole version: ${require('./package.json').version}`);
     } else {
-        let args;
+        let args = [];
         for(let i = 0 ; i < process.argv.length ; i++){
             if(process.argv[i] === 'receive' || process.argv[i] === 'send'){
                 args = process.argv.slice(i);
