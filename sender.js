@@ -4,7 +4,7 @@ module.exports = {
     spinUp
 };
 
-const SOCKET_SEND_OPTS = require('index.js').SOCKET_SEND_OPTS;
+const SOCKET_SEND_OPTS = require('./index.js').SOCKET_SEND_OPTS;
 
 function spinUp(lePath, data, destination){
     var ws = require('ws'),
