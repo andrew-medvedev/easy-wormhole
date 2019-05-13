@@ -67,7 +67,7 @@ function spinUp(lePath){
         });
     }
     function makeReceiver(){
-        wsServer = new ws.Server({ server, backlog: 1, maxPayload: BRICK_SIZE * 2 });
+        wsServer = new ws.Server({ server, backlog: 1, maxPayload: 65536 });
         wsServer.on('connection', newConnectionListener);
         wsServer.on('error', console.error);
     }
