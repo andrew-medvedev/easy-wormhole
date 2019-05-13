@@ -1,0 +1,24 @@
+{
+  "name": "easy-wormhole",
+  "version": "0.0.1",
+  "description": "Easy tool for transfering files and data between hosts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew Medvedev <andrew.medvedev.nh@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "duplexify": "^4.0.0",
+    "express": "^4.16.4",
+    "fs-extra": "^8.0.1",
+    "generate-password": "^1.4.1",
+    "ip": "^1.1.5",
+    "lodash": "^4.17.11",
+    "md5-file": "^4.0.0",
+    "pretty-bytes": "^5.2.0",
+    "readable-stream": "^3.3.0",
+    "safe-buffer": "^5.1.2",
+    "ws": "^7.0.0"
+  }
+}
