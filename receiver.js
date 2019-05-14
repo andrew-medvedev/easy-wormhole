@@ -8,7 +8,7 @@ const PUBLIC_IP = require('./index.js').PUBLIC_IP,
     IDLE_LIFETIME_MS = require('./index.js').IDLE_LIFETIME_MS,
     SOCKET_SEND_OPTS = require('./index.js').SOCKET_SEND_OPTS;
 
-function spinUp(lePath, daemonize){
+function spinUp(lePath, daemonize, customIpAddress){
     var _ = require('lodash'),
         ws = require('ws'),
         prettyBytes = require('pretty-bytes'),
@@ -49,7 +49,7 @@ function spinUp(lePath, daemonize){
     }
     function leListenerStuff(){
         app = express();
-        server = http.createServer(app).listen(listenerPort, PUBLIC_IP);
+        server = http.createServer(app).listen(listenerPort, customIpAddress || PUBLIC_IP);
 
         server.on('error', err => {
             if(err.code === 'EADDRINUSE'){
@@ -75,10 +75,10 @@ function spinUp(lePath, daemonize){
     function _printStuff(){
         var myIp = ip.address();
         console.log();
-        console.log(`\t ~ Listening IP-address: ${PUBLIC_IP} (${myIp})`);
+        console.log(`\t ~ Listening IP-address: ${customIpAddress || `${PUBLIC_IP} (${myIp})`}`);
         console.log(`\t ~ Listening port: ${listenerPort}`);
         console.log(`\t ~ Secret key: ${listenerSecretKey}`);
-        console.log(`\t~~ Destination should look like: ${listenerSecretKey}@${myIp}:${listenerPort} (recheck IP-address)`);
+        console.log(`\t~~ Destination should look like: ${listenerSecretKey}@${customIpAddress || myIp}:${listenerPort} (recheck IP-address)`);
         console.log();
         console.log(`(Use this data to send data here)`);
         console.log();

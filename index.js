@@ -2,7 +2,8 @@
 
 const PUBLIC_IP = '0.0.0.0',
     IDLE_LIFETIME_MS = 60 * 1000,
-    SOCKET_SEND_OPTS = { compress: false, mask: false, fin: true };
+    SOCKET_SEND_OPTS = { compress: false, mask: false, fin: true },
+    IP_ADDRESS_REGEX = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 module.exports = {
     PUBLIC_IP,
@@ -33,7 +34,11 @@ module.exports = {
         switch(args[0]){
             case 'receive':
                 if(args[1]){
-                    return require('./receiver.js').spinUp(args[1], args.includes('-d'));
+                    let ipAddress;
+                    if(args.length > 2){
+                        ipAddress = args.find(e => IP_ADDRESS_REGEX.test(e));
+                    }
+                    return require('./receiver.js').spinUp(args[1], args.includes('-d'), ipAddress);
                 }
                 break;
             case 'send':

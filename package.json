@@ -1,6 +1,6 @@
 {
     "name": "easy-wormhole",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "Easy tool for transfering files and data between hosts",
     "main": "./index.js",
     "scripts": {
