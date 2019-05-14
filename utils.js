@@ -6,8 +6,12 @@ var Transform = require('readable-stream').Transform,
     Buffer = require('safe-buffer').Buffer;
 
 module.exports = {
-    websocketStream
+    websocketStream,
+    daemonize
 };
+
+const DAEMONIZED_Q = '..:: I AM DAEMONIZED ::..',
+    DAMONIZED_A = 'YEAS!';
 
 function buildProxy(options, socketWrite, socketEnd){
     var proxy = new Transform({ objectMode: options.objectMode });
@@ -138,4 +142,21 @@ function websocketStream(target, protocols, options){
     }
 
     return stream
+}
+
+function daemonize(envs){
+    if(process.env[DAEMONIZED_Q] === DAMONIZED_A){
+        delete process.env[DAEMONIZED_Q];
+    } else {
+        let runOpts = {
+            env: Object.assign(process.env, envs, { [DAEMONIZED_Q]: DAMONIZED_A }),
+            cwd: process.cwd(),
+            stdio: "ignore",
+            detached: true
+        };
+        require("child_process")
+            .spawn(process.execPath, process.argv.slice(1), runOpts)
+            .unref();
+        process.exit(0);
+    }
 }

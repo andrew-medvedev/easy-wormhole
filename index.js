@@ -17,7 +17,7 @@ module.exports = {
         console.log();
         console.log('Commands:');
         console.log();
-        console.log('\treceive\t\t~ receive <path> : Listen on global address to receive data and save it into file on <path>. Port and secret key will be generated automatically');
+        console.log('\treceive\t\t~ receive <path> : Listen on global address to receive data and save it into file on <path>. Port and secret key will be generated automatically. Use argument "-d" to daemonize receiver');
         console.log('\tsend\t\t~ send <path or "-- data"> <destination>: Send file or data. If file - first argument should path, if data - two minuses before (-- "data"). Destination should be in format: key@ip_address:port');
         console.log();
     } else if(process.argv.slice(2).includes('--ver')){
@@ -33,7 +33,7 @@ module.exports = {
         switch(args[0]){
             case 'receive':
                 if(args[1]){
-                    return require('./receiver.js').spinUp(args[1]);
+                    return require('./receiver.js').spinUp(args[1], args.includes('-d'));
                 }
                 break;
             case 'send':

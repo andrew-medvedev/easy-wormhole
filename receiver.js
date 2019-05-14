@@ -8,7 +8,7 @@ const PUBLIC_IP = require('./index.js').PUBLIC_IP,
     IDLE_LIFETIME_MS = require('./index.js').IDLE_LIFETIME_MS,
     SOCKET_SEND_OPTS = require('./index.js').SOCKET_SEND_OPTS;
 
-function spinUp(lePath){
+function spinUp(lePath, daemonize){
     var _ = require('lodash'),
         ws = require('ws'),
         prettyBytes = require('pretty-bytes'),
@@ -21,6 +21,8 @@ function spinUp(lePath){
         ip = require('ip'),
         md5File = require('md5-file');
 
+    var utils = require('./utils.js');
+
     var app, server, wsServer,
         listenerPort, listenerSecretKey,
         hearbeat, lastActionNow = _.now(),
@@ -29,32 +31,36 @@ function spinUp(lePath){
         commStage = 1, dataSize, dataSizeBar = 0, percentageBar = 0,
         fileBytesTmpBuffer = [], currentlyWritingBytes = false;
 
-    function leStuff(){
-        listenerPort = _.random(10000, 19999);
-        listenerSecretKey = generatePassword.generate({ length: 48, numbers: true, uppercase: true, symbols: false });
-
+    function generateStuff(){
+        if(process.env.listenerPort && process.env.listenerSecretKey){
+            listenerPort = +process.env.listenerPort;
+            listenerSecretKey = process.env.listenerSecretKey;
+            leListenerStuff();
+        } else {
+            listenerPort = _.random(10000, 19999);
+            listenerSecretKey = generatePassword.generate({ length: 48, numbers: true, uppercase: true, symbols: false });
+            if(daemonize){
+                _printStuff();
+                utils.daemonize({ listenerPort, listenerSecretKey });
+            } else {
+                leListenerStuff();
+            }
+        }
+    }
+    function leListenerStuff(){
         app = express();
         server = http.createServer(app).listen(listenerPort, PUBLIC_IP);
 
         server.on('error', err => {
             if(err.code === 'EADDRINUSE'){
-                leStuff();
+                leListenerStuff();
             } else {
                 console.error(err);
                 process.exit(-1);
             }
         });
         server.on('listening', () => {
-            var myIp = ip.address();
-            console.log();
-            console.log(`\t ~ Listening IP-address: ${PUBLIC_IP} (${myIp})`);
-            console.log(`\t ~ Listening port: ${listenerPort}`);
-            console.log(`\t ~ Secret key: ${listenerSecretKey}`);
-            console.log(`\t~~ Destination should look like: ${listenerSecretKey}@${myIp}:${listenerPort} (recheck IP-address)`);
-            console.log();
-            console.log(`(Use this data to send data here)`);
-            console.log();
-            console.log(`After end or ~${Math.floor(IDLE_LIFETIME_MS / 1000)} secs of idle it will close.`);
+            _printStuff();
 
             hearbeat = setInterval(() => {
                 if(_.now() - IDLE_LIFETIME_MS > lastActionNow){
@@ -65,6 +71,21 @@ function spinUp(lePath){
 
             makeReceiver();
         });
+    }
+    function _printStuff(){
+        var myIp = ip.address();
+        console.log();
+        console.log(`\t ~ Listening IP-address: ${PUBLIC_IP} (${myIp})`);
+        console.log(`\t ~ Listening port: ${listenerPort}`);
+        console.log(`\t ~ Secret key: ${listenerSecretKey}`);
+        console.log(`\t~~ Destination should look like: ${listenerSecretKey}@${myIp}:${listenerPort} (recheck IP-address)`);
+        console.log();
+        console.log(`(Use this data to send data here)`);
+        console.log();
+        console.log(`After end or ~${Math.floor(IDLE_LIFETIME_MS / 1000)} secs of idle it will close.`);
+        if(daemonize){
+            console.log('(Btw it\'s daemonized - you can continue your work. Goodbye!)');
+        }
     }
     function makeReceiver(){
         wsServer = new ws.Server({ server, backlog: 1, maxPayload: 65536 });
@@ -253,5 +274,5 @@ function spinUp(lePath){
         }
     }
 
-    leStuff();
+    generateStuff();
 }
