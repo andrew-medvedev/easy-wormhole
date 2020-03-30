@@ -34,6 +34,6 @@
         "pretty-bytes": "^5.2.0",
         "readable-stream": "^3.3.0",
         "safe-buffer": "^5.1.2",
-        "ws": "^7.0.0"
+        "ws": "7.2.3"
     }
 }
