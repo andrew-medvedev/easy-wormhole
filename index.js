@@ -16,6 +16,8 @@ module.exports = {
         console.log();
         console.log('Usage: easyWormhole <receive or send> <path to file or "data"> <destination>');
         console.log();
+        console.log(`Version: ${require('./package.json').version}`);
+        console.log();
         console.log('Commands:');
         console.log();
         console.log('\treceive\t\t~ receive <path> : Listen on global address to receive data and save it into file on <path>. Port and secret key will be generated automatically. Use argument "-d" to daemonize receiver');
