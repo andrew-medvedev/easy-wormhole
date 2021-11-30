@@ -1,7 +1,7 @@
 'use strict';
 
 const PUBLIC_IP = '0.0.0.0',
-    IDLE_LIFETIME_MS = 60 * 1000,
+    IDLE_LIFETIME_MS = 60 * 1000 * 5,
     SOCKET_SEND_OPTS = { compress: false, mask: false, fin: true },
     IP_ADDRESS_REGEX = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 

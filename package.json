@@ -1,7 +1,7 @@
 {
     "name": "easy-wormhole",
-    "version": "0.0.9",
-    "description": "Easy tool for transfering files and data between hosts",
+    "version": "0.0.10",
+    "description": "Easy tool for transferring files and data between hosts",
     "main": "./index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
